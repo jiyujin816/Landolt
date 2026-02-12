@@ -41,10 +41,9 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
   canvas.width = size;
   canvas.height = size;
 
-  const parentWidth = canvas.parentElement ? canvas.parentElement.clientWidth : size;
-  const displaySize = Math.min(size, Math.max(80, parentWidth - 8));
-  canvas.style.width = `${displaySize}px`;
-  canvas.style.height = `${displaySize}px`;
+  // 視力0.1などの大きい環でも規定サイズを縮小しない（縦横比は正方形固定）
+  canvas.style.width = `${size}px`;
+  canvas.style.height = `${size}px`;
 
   const unit = outerPx / 5;
   const outerRadius = outerPx / 2;
@@ -157,7 +156,6 @@ ringColorInput.addEventListener("input", () => {
 });
 sizeScaleInput.addEventListener("input", updateRings);
 pxPerMmInput.addEventListener("input", updateRings);
-window.addEventListener("resize", updateRings);
 
 applyTheme();
 updateRings();
