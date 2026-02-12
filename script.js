@@ -19,6 +19,11 @@ const cardStates = [];
 const ORIENTATIONS = [0, 90, 180, 270];
 
 const randomAngle = () => ORIENTATIONS[Math.floor(Math.random() * ORIENTATIONS.length)];
+const normalizeToCardinal = (angle) => {
+  const normalized = ((Number(angle) % 360) + 360) % 360;
+  const snapped = Math.round(normalized / 90) * 90;
+  return snapped % 360;
+};
 
 const applyTheme = () => {
   document.documentElement.style.setProperty("--bg", backgroundColorInput.value);
@@ -94,7 +99,7 @@ function updateRings() {
 }
 
 function setOrientation(state, angle) {
-  state.orientation = angle;
+  state.orientation = normalizeToCardinal(angle);
   updateRings();
 }
 
@@ -110,7 +115,7 @@ visualAcuities.forEach((acuity) => {
     acuity,
     canvas,
     meta,
-    orientation: randomAngle(),
+    orientation: normalizeToCardinal(randomAngle()),
   };
 
   title.textContent = `視力 ${acuity.toFixed(1)}`;
@@ -125,7 +130,7 @@ visualAcuities.forEach((acuity) => {
 
 randomizeAllButton.addEventListener("click", () => {
   cardStates.forEach((state) => {
-    state.orientation = randomAngle();
+    state.orientation = normalizeToCardinal(randomAngle());
   });
   updateRings();
 });
