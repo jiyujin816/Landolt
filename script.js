@@ -34,7 +34,7 @@ const applyTheme = () => {
 const toPx = (mm, pxPerMm, scale) => mm * pxPerMm * scale;
 
 function drawLandoltRing(state, color, orientation, outerPx) {
-  const { canvas, card } = state;
+  const { canvas, card, surface } = state;
   const ctx = canvas.getContext("2d");
   const padding = Math.max(12, outerPx * 0.35);
   const size = Math.ceil(outerPx + padding * 2);
@@ -47,7 +47,9 @@ function drawLandoltRing(state, color, orientation, outerPx) {
   canvas.style.height = `${size}px`;
 
   const unit = outerPx / 5;
-  card.style.width = `${Math.max(260, size + 36)}px`;
+  const frameWidth = Math.max(280, size + 34);
+  card.style.width = `${frameWidth}px`;
+  surface.style.width = `${size + 16}px`;
   const outerRadius = outerPx / 2;
   const innerRadius = (outerPx * 3) / 10;
   const cx = size / 2;
@@ -125,12 +127,14 @@ visualAcuities.forEach((acuity) => {
   const title = card.querySelector("h2");
   const button = card.querySelector("button");
   const meta = card.querySelector(".meta");
+  const surface = card.querySelector(".ring-surface");
   const canvas = card.querySelector("canvas");
 
   const state = {
     acuity,
     card,
     canvas,
+    surface,
     meta,
     orientation: normalizeToCardinal(randomAngle()),
   };
