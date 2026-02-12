@@ -16,7 +16,7 @@ const pxPerMmInput = document.getElementById("pxPerMm");
 const randomizeAllButton = document.getElementById("randomizeAll");
 
 const cardStates = [];
-const ORIENTATIONS = [0, 45, 90, 135, 180, 225, 270, 315];
+const ORIENTATIONS = [0, 90, 180,270];
 
 const randomAngle = () => ORIENTATIONS[Math.floor(Math.random() * ORIENTATIONS.length)];
 
