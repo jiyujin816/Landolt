@@ -14,6 +14,7 @@ const sizeScaleInput = document.getElementById("sizeScale");
 const sizeValueLabel = document.getElementById("sizeValue");
 const pxPerMmInput = document.getElementById("pxPerMm");
 const randomizeAllButton = document.getElementById("randomizeAll");
+const buildInfo = document.getElementById("buildInfo");
 
 const cardStates = [];
 const ORIENTATIONS = [0, 90, 180, 270];
@@ -39,8 +40,11 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
 
   canvas.width = size;
   canvas.height = size;
-  canvas.style.width = `${size}px`;
-  canvas.style.height = `${size}px`;
+
+  const parentWidth = canvas.parentElement ? canvas.parentElement.clientWidth : size;
+  const displaySize = Math.min(size, Math.max(80, parentWidth - 8));
+  canvas.style.width = `${displaySize}px`;
+  canvas.style.height = `${displaySize}px`;
 
   const unit = outerPx / 5;
   const outerRadius = outerPx / 2;
@@ -79,12 +83,21 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
   ctx.globalCompositeOperation = "source-over";
 }
 
+
+function updateBuildInfo() {
+  if (!buildInfo) return;
+  const now = new Date();
+  buildInfo.textContent = `最終描画時刻: ${now.toLocaleString("ja-JP")}`;
+}
+
 function updateRings() {
   const scale = Number(sizeScaleInput.value);
   const pxPerMm = Number(pxPerMmInput.value);
   const ringColor = ringColorInput.value;
 
   sizeValueLabel.textContent = `${scale.toFixed(1)}x`;
+
+  updateBuildInfo();
 
   cardStates.forEach((state) => {
     const outerMm = OUTER_MM_FOR_1_0 / state.acuity;
@@ -129,6 +142,8 @@ visualAcuities.forEach((acuity) => {
 });
 
 randomizeAllButton.addEventListener("click", () => {
+  updateBuildInfo();
+
   cardStates.forEach((state) => {
     state.orientation = normalizeToCardinal(randomAngle());
   });
@@ -142,6 +157,7 @@ ringColorInput.addEventListener("input", () => {
 });
 sizeScaleInput.addEventListener("input", updateRings);
 pxPerMmInput.addEventListener("input", updateRings);
+window.addEventListener("resize", updateRings);
 
 applyTheme();
 updateRings();
