@@ -90,8 +90,10 @@ function updateBuildInfo() {
 }
 
 function updateRings() {
-  const scale = Number(sizeScaleInput.value);
-  const pxPerMm = Number(pxPerMmInput.value);
+  const rawScale = Number(sizeScaleInput.value);
+  const rawPxPerMm = Number(pxPerMmInput.value);
+  const scale = Number.isFinite(rawScale) && rawScale > 0 ? rawScale : 1;
+  const pxPerMm = Number.isFinite(rawPxPerMm) && rawPxPerMm > 0 ? rawPxPerMm : 3.78;
   const ringColor = ringColorInput.value;
 
   sizeValueLabel.textContent = `${scale.toFixed(1)}x`;
