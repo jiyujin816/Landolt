@@ -21,3 +21,8 @@ python3 -m http.server 4173 --bind 0.0.0.0
 ```
 
 ブラウザで `http://127.0.0.1:4173` を開いて確認できます。
+
+
+## GitHub Pages 公開
+
+`main` ブランチを GitHub Pages の公開元に設定すれば、そのまま公開できます。
