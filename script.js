@@ -40,7 +40,7 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
   canvas.width = size;
   canvas.height = size;
   canvas.style.width = `${size}px`;
-  canvas.style.height = `${size}px`;
+  canvas.style.height = "auto";
 
   const unit = outerPx / 5;
   const outerRadius = outerPx / 2;
