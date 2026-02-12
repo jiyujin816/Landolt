@@ -33,7 +33,8 @@ const applyTheme = () => {
 
 const toPx = (mm, pxPerMm, scale) => mm * pxPerMm * scale;
 
-function drawLandoltRing(canvas, color, orientation, outerPx) {
+function drawLandoltRing(state, color, orientation, outerPx) {
+  const { canvas, card } = state;
   const ctx = canvas.getContext("2d");
   const padding = Math.max(12, outerPx * 0.35);
   const size = Math.ceil(outerPx + padding * 2);
@@ -46,6 +47,7 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
   canvas.style.height = `${size}px`;
 
   const unit = outerPx / 5;
+  card.style.width = `${Math.max(260, size + 36)}px`;
   const outerRadius = outerPx / 2;
   const innerRadius = (outerPx * 3) / 10;
   const cx = size / 2;
@@ -104,7 +106,7 @@ function updateRings() {
     const outerMm = OUTER_MM_FOR_1_0 / state.acuity;
     const outerPx = toPx(outerMm, pxPerMm, scale);
 
-    drawLandoltRing(state.canvas, ringColor, state.orientation, outerPx);
+    drawLandoltRing(state, ringColor, state.orientation, outerPx);
 
     state.meta.textContent = `外径 ${outerMm.toFixed(2)} mm（${outerPx.toFixed(1)} px） / 切れ目幅 ${
       (outerMm / 5).toFixed(2)
@@ -127,6 +129,7 @@ visualAcuities.forEach((acuity) => {
 
   const state = {
     acuity,
+    card,
     canvas,
     meta,
     orientation: normalizeToCardinal(randomAngle()),
