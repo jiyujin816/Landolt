@@ -16,7 +16,7 @@ const pxPerMmInput = document.getElementById("pxPerMm");
 const randomizeAllButton = document.getElementById("randomizeAll");
 
 const cardStates = [];
-const ORIENTATIONS = [0, 45, 90, 135, 180, 225, 270, 315];
+const ORIENTATIONS = [0, 90, 180, 270];
 
 const randomAngle = () => ORIENTATIONS[Math.floor(Math.random() * ORIENTATIONS.length)];
 
@@ -38,6 +38,8 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
   canvas.style.height = `${size}px`;
 
   const unit = outerPx / 5;
+  const outerRadius = outerPx / 2;
+  const innerRadius = (outerPx * 3) / 10;
   const cx = size / 2;
   const cy = size / 2;
 
@@ -49,19 +51,19 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
 
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.arc(cx, cy, outerPx / 2, 0, Math.PI * 2);
+  ctx.arc(cx, cy, outerRadius, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.globalCompositeOperation = "destination-out";
   ctx.beginPath();
-  ctx.arc(cx, cy, (outerPx * 3) / 10, 0, Math.PI * 2);
+  ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2);
   ctx.fill();
 
   // 切れ目の縁で黒が残らないよう、destination-out の塗りで余裕を持って除去する
-  const gapBleed = Math.max(1.5, outerPx * 0.01);
-  const gapStartX = cx;
+  const gapBleed = Math.max(2, outerPx * 0.015);
+  const gapStartX = cx + innerRadius - gapBleed;
   const gapStartY = cy - unit / 2 - gapBleed;
-  const gapWidth = size - gapStartX + gapBleed;
+  const gapWidth = outerRadius - innerRadius + padding + gapBleed * 2;
   const gapHeight = unit + gapBleed * 2;
 
   ctx.beginPath();
