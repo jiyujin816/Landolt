@@ -16,9 +16,14 @@ const pxPerMmInput = document.getElementById("pxPerMm");
 const randomizeAllButton = document.getElementById("randomizeAll");
 
 const cardStates = [];
-const ORIENTATIONS = [0, 90, 180,270];
+const ORIENTATIONS = [0, 90, 180, 270];
 
 const randomAngle = () => ORIENTATIONS[Math.floor(Math.random() * ORIENTATIONS.length)];
+const normalizeToCardinal = (angle) => {
+  const normalized = ((Number(angle) % 360) + 360) % 360;
+  const snapped = Math.round(normalized / 90) * 90;
+  return snapped % 360;
+};
 
 const applyTheme = () => {
   document.documentElement.style.setProperty("--bg", backgroundColorInput.value);
@@ -38,6 +43,8 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
   canvas.style.height = `${size}px`;
 
   const unit = outerPx / 5;
+  const outerRadius = outerPx / 2;
+  const innerRadius = (outerPx * 3) / 10;
   const cx = size / 2;
   const cy = size / 2;
 
@@ -49,15 +56,24 @@ function drawLandoltRing(canvas, color, orientation, outerPx) {
 
   ctx.fillStyle = color;
   ctx.beginPath();
-  ctx.arc(cx, cy, outerPx / 2, 0, Math.PI * 2);
+  ctx.arc(cx, cy, outerRadius, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.globalCompositeOperation = "destination-out";
   ctx.beginPath();
-  ctx.arc(cx, cy, (outerPx * 3) / 10, 0, Math.PI * 2);
+  ctx.arc(cx, cy, innerRadius, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.clearRect(cx + (outerPx * 3) / 10, cy - unit / 2, unit * 2, unit);
+  // 切れ目の縁で黒が残らないよう、destination-out の塗りで余裕を持って除去する
+  const gapBleed = Math.max(2, outerPx * 0.015);
+  const gapStartX = cx + innerRadius - gapBleed;
+  const gapStartY = cy - unit / 2 - gapBleed;
+  const gapWidth = outerRadius - innerRadius + padding + gapBleed * 2;
+  const gapHeight = unit + gapBleed * 2;
+
+  ctx.beginPath();
+  ctx.rect(gapStartX, gapStartY, gapWidth, gapHeight);
+  ctx.fill();
 
   ctx.restore();
   ctx.globalCompositeOperation = "source-over";
@@ -83,7 +99,7 @@ function updateRings() {
 }
 
 function setOrientation(state, angle) {
-  state.orientation = angle;
+  state.orientation = normalizeToCardinal(angle);
   updateRings();
 }
 
@@ -99,7 +115,7 @@ visualAcuities.forEach((acuity) => {
     acuity,
     canvas,
     meta,
-    orientation: randomAngle(),
+    orientation: normalizeToCardinal(randomAngle()),
   };
 
   title.textContent = `視力 ${acuity.toFixed(1)}`;
@@ -114,7 +130,7 @@ visualAcuities.forEach((acuity) => {
 
 randomizeAllButton.addEventListener("click", () => {
   cardStates.forEach((state) => {
-    state.orientation = randomAngle();
+    state.orientation = normalizeToCardinal(randomAngle());
   });
   updateRings();
 });
