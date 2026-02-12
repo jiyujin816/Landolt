@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JIS準拠ランドルト環ジェネレーター</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <h1>ランドルト環（JIS C 7612 比率準拠）</h1>
+      <p class="description">
+        視力0.1〜1.0のランドルト環を表示します。<br />
+        比率は <strong>外径:内径:線幅:切れ目幅 = 5:3:1:1</strong> で描画し、方向は8方向ランダム化できます。
+      </p>
+
+      <section class="controls" aria-label="表示設定">
+        <label>
+          背景色
+          <input id="backgroundColor" type="color" value="#ffffff" />
+        </label>
+        <label>
+          環の色
+          <input id="ringColor" type="color" value="#111111" />
+        </label>
+        <label>
+          全体倍率
+          <input id="sizeScale" type="range" min="0.5" max="2.5" step="0.1" value="1" />
+          <span id="sizeValue">1.0x</span>
+        </label>
+        <label>
+          画面換算（px/mm）
+          <input id="pxPerMm" type="number" min="1" max="20" step="0.01" value="3.78" />
+        </label>
+        <button id="randomizeAll" type="button">全ての向きをランダム化</button>
+      </section>
+
+      <p class="note">
+        ※ JIS寸法は5 m視距離での角度規定（切れ目1分角・外径5分角）に基づき mm で算出し、
+        px/mm で画面に換算しています。厳密運用時はモニター実測で px/mm を校正してください。
+      </p>
+
+      <section id="chart" class="chart" aria-label="視力別ランドルト環一覧"></section>
+    </main>
+
+    <template id="ringTemplate">
+      <article class="ring-card">
+        <header>
+          <h2></h2>
+          <button type="button">この環をランダム回転</button>
+        </header>
+        <p class="meta"></p>
+        <canvas width="400" height="400" aria-label="ランドルト環"></canvas>
+      </article>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
