@@ -66,10 +66,9 @@ h1 {
 }
 
 .chart {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 12px;
-  align-items: flex-start;
 }
 
 .ring-card {
@@ -77,6 +76,8 @@ h1 {
   border-radius: 10px;
   padding: 10px;
   background: rgba(255, 255, 255, 0.78);
+  width: max-content;
+  max-width: none;
 }
 
 .ring-card header {
@@ -110,6 +111,7 @@ h1 {
   padding: 8px;
   border-radius: 8px;
   background: var(--bg);
+  overflow: visible;
 }
 
 .ring-card canvas {
