@@ -110,3 +110,10 @@ h1 {
   max-width: 100%;
   height: auto;
 }
+
+
+.build-info {
+  margin: 0 0 14px;
+  font-size: 0.82rem;
+  color: #555;
+}
